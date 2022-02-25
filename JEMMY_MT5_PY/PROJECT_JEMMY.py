@@ -54,13 +54,13 @@ M3  = mt5.TIMEFRAME_M3
 M2  = mt5.TIMEFRAME_M2
 M1  = mt5.TIMEFRAME_M1
 
-currency_pairs = [ "EURUSD.r","GBPUSD.r","AUDUSD.r","NZDUSD.r",
-                   "USDJPY.r","USDCHF.r","USDCAD.r",
-                   "XAUUSD.r",
-                   "US30","US500"]
-mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1]
-strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1"]
-numCandles     = 15
+currency_pairs = None
+with open('instruments.txt') as f:
+    currency_pairs = [line.rstrip('\n') for line in f]
+
+mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12]
+strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12"]
+numCandles     = 14
 offset = 1
 DeMarkSignals = []
 DeMarkSignalsTF = []
@@ -145,16 +145,12 @@ while(True):
             rates_frame = getRates(cp, mt5Timeframe[t], numCandles)
             getSignals(rates_frame,strTimeframe[t])
         if(all(x == DeMarkSignals[0] for x in DeMarkSignals)):
-            if(len(DeMarkSignals)>=7):
-                if(DeMarkSignalsTF[0]=="M1"):
-                    display+="DeMark Matches: "+str(len(DeMarkSignals))+"\n"
-                    display+=" ".join(DeMarkSignals)+"\n"
-                    display+=" ".join(DeMarkSignalsTF)+"\n"
-                    winsound.Beep(freq, duration)
+            if(len(DeMarkSignals)==len(mt5Timeframe)):
+                display+="********************"+DeMarkSignals[0]+"\n"
+                winsound.Beep(freq, duration)
                     
         display+="==============================\n"
     print(display)
     time.sleep(60)
     os.system('cls' if os.name == 'nt' else 'clear') 
-##########################################################################################
 
